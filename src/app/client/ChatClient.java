@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.jar.Attributes.Name;
 
 public class ChatClient {
     public static void main(String[] args) {

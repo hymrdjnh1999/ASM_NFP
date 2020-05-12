@@ -3,36 +3,24 @@ package app.server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 import app.EncodeDeCode;
 
 public class ChatServer {
-    private int port = 8818;
     private Set<String> userNames = new HashSet<String>();
     private Set<Socket> listUser = new HashSet<Socket>();
     private DataOutputStream dataOutputStream;
-    private PrintWriter writer;
-
-    public ChatServer(int port) {
-        this.port = port;
-
-    }
 
     public class ServerRead extends Thread {
         Socket socket;
 
         public ServerRead(Socket socket) {
             this.socket = socket;
-            try {
-                writer = new PrintWriter(socket.getOutputStream(), true);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-            }
 
         }
 
@@ -91,7 +79,11 @@ public class ChatServer {
     }
 
     public void execute() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+
+        System.out.print("Enter port : ");
+        int port = Integer.parseInt(new Scanner(System.in).nextLine());
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("waiting client connection on port : " + port);
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -109,9 +101,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
-
-        ChatServer server = new ChatServer(8818);
-        server.execute();
+        new ChatServer().execute();
     }
 
     void sendMessageToAllClient(String message, Socket excludeUser) {
