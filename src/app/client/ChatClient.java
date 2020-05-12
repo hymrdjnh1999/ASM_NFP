@@ -24,13 +24,13 @@ public class ChatClient {
             System.out.println("1.Regist");
             System.out.println("2.Join to chat room");
             System.out.println("=============================");
-            System.out.println("#Select : ");
+            System.out.print("#Select : ");
             int select = Integer.parseInt(scanner.nextLine());
             switch (select) {
                 case 1:
-                    System.out.println("Enter host name : ");
+                    System.out.print("Enter host name : ");
                     hostName = scanner.nextLine();
-                    System.out.println("Enter port server : ");
+                    System.out.print("Enter port server : ");
                     port = Integer.parseInt(scanner.nextLine());
                     break;
                 case 2:

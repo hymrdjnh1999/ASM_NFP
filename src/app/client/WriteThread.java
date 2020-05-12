@@ -41,11 +41,7 @@ public class WriteThread extends Thread {
                 mess = scanner.nextLine();
                 dataOutputStream.writeUTF(mess);
             } while (!mess.equals("bye") || !mess.equals("quit"));
-            try {
-                socket.close();
-            } catch (Exception e) {
-                System.out.println("Error writing to server: " + e.getMessage());
-            }
+
         } catch (Exception e) {
             // TODO: handle exception
         }

@@ -31,11 +31,11 @@ public class ReadThread extends Thread {
                 }
                 System.out.println("\n" + response);
                 if (chatClient.getUserName() != null) {
-                    System.out.println(chatClient.getUserName() + " : ");
+                    System.out.print(chatClient.getUserName() + " : ");
                 }
             } catch (Exception e) {
-                System.out.println("Error reading from server: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("Bye bye");
+                System.exit(1);
                 break;
             }
         }
