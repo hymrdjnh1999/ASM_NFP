@@ -8,12 +8,10 @@ import app.EncodeDeCode;
 
 public class ReadThread extends Thread {
     private Socket socket;
-    private ChatClient chatClient;
     DataInputStream dataInputStream;
 
-    public ReadThread(Socket socket, ChatClient chatClient) {
+    public ReadThread(Socket socket) {
         this.socket = socket;
-        this.chatClient = chatClient;
         try {
             // InputStream inputStream =;
             dataInputStream = new DataInputStream(socket.getInputStream());
@@ -34,8 +32,8 @@ public class ReadThread extends Thread {
                 }
 
                 System.out.println("\n" + decode);
-                if (chatClient.getUserName() != null) {
-                    System.out.print(chatClient.getUserName() + " : ");
+                if (ChatClient.getUserName() != null) {
+                    System.out.print(ChatClient.getUserName() + " : ");
                 }
             } catch (Exception e) {
                 System.out.println("Bye bye");

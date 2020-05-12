@@ -10,13 +10,11 @@ import app.EncodeDeCode;
 
 public class WriteThread extends Thread {
     private Socket socket;
-    private ChatClient chatClient;
     private DataOutputStream dataOutputStream = null;
     static Scanner scanner = new Scanner(System.in);
 
-    public WriteThread(Socket socket2, ChatClient chatClient2) {
+    public WriteThread(Socket socket2) {
         this.socket = socket2;
-        this.chatClient = chatClient2;
 
         try {
 
@@ -35,7 +33,7 @@ public class WriteThread extends Thread {
         try {
             Console console = System.console();
             String userName = console.readLine("\nEnter yor name : ");
-            chatClient.setUserName(userName);
+            ChatClient.setUserName(userName);
             String encode = EncodeDeCode.encode(userName);
             dataOutputStream.writeUTF(encode);
             String mess;

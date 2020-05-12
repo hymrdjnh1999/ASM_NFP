@@ -4,31 +4,25 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.jar.Attributes.Name;
 
 public class ChatClient {
     public static void main(String[] args) {
 
-        ChatClient chatClient;
-        try {
-            chatClient = new ChatClient(new Socket("localhost", 8818));
-            chatClient.execute();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        execute();
     }
 
-    private String hostName = "", userName;
-    private int port = -1;
+    private static String hostName = "", userName;
+    private static int port = -1;
     static Scanner scanner = new Scanner(System.in);
-    private Socket socket;
+    private static Socket socket;
 
     public ChatClient(Socket socket) {
         this.socket = socket;
 
     }
 
-    public void mainMenu() {
+    public static void mainMenu() {
         while (true) {
             System.out.println("=============================");
             System.out.println("Sig up to chat");
@@ -60,8 +54,8 @@ public class ChatClient {
         try {
             Socket socket = new Socket(hostName, port);
             System.out.println("Connect to the chat server ");
-            new ReadThread(socket, this).start();
-            new WriteThread(socket, this).start();
+            new ReadThread(socket).start();
+            new WriteThread(socket).start();
 
         } catch (UnknownHostException e) {
             System.out.println("Server not found : " + e.getMessage());
@@ -70,22 +64,22 @@ public class ChatClient {
         }
     }
 
-    public void execute() {
+    public static void execute() {
         mainMenu();
     }
 
     /**
      * @param userName the userName to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public static void setUserName(String _Name) {
+        userName = _Name;
     }
 
     /**
      * @return the userName
      */
-    public String getUserName() {
-        return this.userName;
+    public static String getUserName() {
+        return userName;
     }
 
 }
