@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import app.EncodeDeCode;
+
 public class WriteThread extends Thread {
     private Socket socket;
     private ChatClient chatClient;
@@ -34,12 +36,14 @@ public class WriteThread extends Thread {
             Console console = System.console();
             String userName = console.readLine("\nEnter yor name : ");
             chatClient.setUserName(userName);
-            dataOutputStream.writeUTF(userName);
+            String encode = EncodeDeCode.encode(userName);
+            dataOutputStream.writeUTF(encode);
             String mess;
             do {
                 System.out.print(userName + " : ");
                 mess = scanner.nextLine();
-                dataOutputStream.writeUTF(mess);
+                encode = EncodeDeCode.encode(mess);
+                dataOutputStream.writeUTF(encode);
             } while (!mess.equals("bye") || !mess.equals("quit"));
 
         } catch (Exception e) {

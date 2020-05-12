@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import app.EncodeDeCode;
+
 public class ReadThread extends Thread {
     private Socket socket;
     private ChatClient chatClient;
@@ -26,10 +28,12 @@ public class ReadThread extends Thread {
         while (true) {
             try {
                 String response = dataInputStream.readUTF();
-                if (response.isEmpty()) {
+                String decode = EncodeDeCode.decode(response);
+                if (decode.isEmpty()) {
                     return;
                 }
-                System.out.println("\n" + response);
+
+                System.out.println("\n" + decode);
                 if (chatClient.getUserName() != null) {
                     System.out.print(chatClient.getUserName() + " : ");
                 }

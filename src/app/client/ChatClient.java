@@ -6,26 +6,42 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ChatClient {
+    public static void main(String[] args) {
+
+        ChatClient chatClient;
+        try {
+            chatClient = new ChatClient(new Socket("localhost", 8818));
+            chatClient.execute();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     private String hostName = "", userName;
     private int port = -1;
     static Scanner scanner = new Scanner(System.in);
+    private Socket socket;
 
-    public ChatClient(String hostName, int port) {
-        this.hostName = hostName;
-        this.port = port;
+    public ChatClient(Socket socket) {
+        this.socket = socket;
 
     }
 
-    public void execute() {
+    public void mainMenu() {
         while (true) {
             System.out.println("=============================");
             System.out.println("Sig up to chat");
             System.out.println("=============================");
             System.out.println("1.Regist");
             System.out.println("2.Join to chat room");
+            System.out.println("0.Exit ");
             System.out.println("=============================");
             System.out.print("#Select : ");
             int select = Integer.parseInt(scanner.nextLine());
+            if (select == 0) {
+                System.exit(1);
+            }
             switch (select) {
                 case 1:
                     System.out.print("Enter host name : ");
@@ -52,7 +68,10 @@ public class ChatClient {
         } catch (IOException e) {
             System.out.println("I/O Error: " + e.getMessage());
         }
+    }
 
+    public void execute() {
+        mainMenu();
     }
 
     /**
@@ -69,9 +88,4 @@ public class ChatClient {
         return this.userName;
     }
 
-    public static void main(String[] args) {
-
-        ChatClient chatClient = new ChatClient("localhost", 8818);
-        chatClient.execute();
-    }
 }

@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
+import app.EncodeDeCode;
+
 public class ChatServer {
     private int port = 8818;
     private Set<String> userNames = new HashSet<String>();
@@ -30,7 +32,6 @@ public class ChatServer {
                 writer = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
             }
 
         }
@@ -41,25 +42,31 @@ public class ChatServer {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 printUser();
                 String userName = dataInputStream.readUTF();
-                userNames.add(userName);
-                String reportConnect = userName + " connected to server";
-                sendMessageToAllClient(reportConnect, socket);
+                String decode = EncodeDeCode.decode(userName);
+                String decodeUserName = decode;
+                userNames.add(decode);
+                String reportConnect = decode + " connected to server";
                 System.out.println(reportConnect);
+                String encode = EncodeDeCode.encode(reportConnect);
+                sendMessageToAllClient(encode, socket);
+                // System.out.println(reportConnect);
                 while (true) {
                     String read = dataInputStream.readUTF();
-                    sendMessageToAllClient(userName + " : " + read, socket);
-                    if (read.equals("bye")) {
+                    decode = EncodeDeCode.decode(read);
+                    encode = EncodeDeCode.encode(decodeUserName + " : " + decode);
+                    sendMessageToAllClient(encode, socket);
+                    if (decode.equals("bye")) {
                         removeUser(userName, socket);
+                        System.out.println(decodeUserName + " has quitted");
                         socket.close();
-                        sendMessageToAllClient(userName + " has quitted", socket);
-                        System.out.println(userName + " has quitted");
+                        encode = EncodeDeCode.encode(decodeUserName + " has quitted");
+                        sendMessageToAllClient(encode, socket);
                         break;
                     }
                 }
 
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
             }
         }
 
@@ -68,14 +75,15 @@ public class ChatServer {
     void printUser() {
         if (!(userNames.isEmpty())) {
             try {
-                dataOutputStream.writeUTF("User connected " + getUserName());
+                String encode = EncodeDeCode.encode("User connected " + getUserName().toString());
+                dataOutputStream.writeUTF(encode);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
             }
         } else {
             try {
-                dataOutputStream.writeUTF("No other user connected");
+                String encode = EncodeDeCode.encode("No other user connected");
+                dataOutputStream.writeUTF(encode);
             } catch (Exception e) {
                 // TODO: handle exception
             }
@@ -113,8 +121,7 @@ public class ChatServer {
                     DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
                     dataOutputStream.writeUTF(message);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+
                 }
             }
         }
