@@ -8,12 +8,12 @@ import java.util.Scanner;
 
 import app.EncodeDeCode;
 
-public class WriteThread extends Thread {
+public class ClientWrite extends Thread {
     private Socket socket;
     private DataOutputStream dataOutputStream = null;
     static Scanner scanner = new Scanner(System.in);
 
-    public WriteThread(Socket socket2) {
+    public ClientWrite(Socket socket2) {
         this.socket = socket2;
 
         try {

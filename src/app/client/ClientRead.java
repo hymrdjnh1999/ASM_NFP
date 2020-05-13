@@ -6,11 +6,11 @@ import java.net.Socket;
 
 import app.EncodeDeCode;
 
-public class ReadThread extends Thread {
+public class ClientRead extends Thread {
     private Socket socket;
     DataInputStream dataInputStream;
 
-    public ReadThread(Socket socket) {
+    public ClientRead(Socket socket) {
         this.socket = socket;
         try {
             // InputStream inputStream =;

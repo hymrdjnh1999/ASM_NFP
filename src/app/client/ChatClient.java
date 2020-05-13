@@ -8,15 +8,15 @@ import app.server.ChatServer;
 
 public class ChatClient {
 
+    private static String hostName = "", userName;
+    private static int port = -1;
+    static Scanner scanner = new Scanner(System.in);
+    static Socket socket;
+
     public static void main(String[] args) throws IOException {
 
         mainMenu();
     }
-
-    private static String hostName = "", userName;
-    private static int port = -1;
-    static Scanner scanner = new Scanner(System.in);
-    private static Socket socket;
 
     static int isNumeric() {
         int number = -1;
@@ -61,7 +61,7 @@ public class ChatClient {
             } catch (Exception e) {
                 ChatServer.clrscr();
 
-                System.err.println("Not found server!\nPlease re-enter port and your host name !");
+                System.err.println("Wrong host name or not found server!\nPlease re-enter port and your host name !");
             }
         }
         System.out.println("Connection successfully with your host name : " + hostName + " port server : " + port);
@@ -116,8 +116,8 @@ public class ChatClient {
         }
 
         System.out.println("Connect to the chat server ");
-        new ReadThread(socket).start();
-        new WriteThread(socket).start();
+        new ClientRead(socket).start();
+        new ClientWrite(socket).start();
 
     }
 

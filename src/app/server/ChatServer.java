@@ -1,6 +1,5 @@
 package app.server;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,17 +11,17 @@ import java.util.Set;
 import app.EncodeDeCode;
 
 public class ChatServer {
-    private Set<String> userNames = new HashSet<String>();
-    private Set<Socket> listUser = new HashSet<Socket>();
-    private DataOutputStream dataOutputStream;
+    public static Set<String> userNames = new HashSet<String>();
+    private static Set<Socket> listUser = new HashSet<Socket>();
+    static DataOutputStream dataOutputStream;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        new ChatServer().execute();
+        execute();
     }
 
-    void sendMessageToAllClient(String message, Socket excludeUser) {
-        for (Socket user : this.listUser) {
+    static void sendMessageToAllClient(String message, Socket excludeUser) {
+        for (Socket user : listUser) {
             if (!user.equals(excludeUser)) {
                 try {
                     DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
@@ -50,68 +49,6 @@ public class ChatServer {
         return number;
     }
 
-    public class ServerRead extends Thread {
-        Socket socket;
-
-        public ServerRead(Socket socket) {
-            this.socket = socket;
-
-        }
-
-        @Override
-        public void run() {
-            try {
-                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                printUser();
-                String userName = dataInputStream.readUTF();
-                String decode = EncodeDeCode.decode(userName);
-                String decodeUserName = decode;
-                userNames.add(decode);
-                String reportConnect = decode + " connected to server";
-                System.out.println(reportConnect);
-                String encode = EncodeDeCode.encode(reportConnect);
-                sendMessageToAllClient(encode, socket);
-                // System.out.println(reportConnect);
-                while (true) {
-                    String read = dataInputStream.readUTF();
-                    decode = EncodeDeCode.decode(read);
-                    encode = EncodeDeCode.encode(decodeUserName + " : " + decode);
-                    sendMessageToAllClient(encode, socket);
-                    if (decode.equals("bye")) {
-                        removeUser(userName, socket);
-                        System.out.println(decodeUserName + " has quitted");
-                        socket.close();
-                        encode = EncodeDeCode.encode(decodeUserName + " has quitted");
-                        sendMessageToAllClient(encode, socket);
-                        break;
-                    }
-                }
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-            }
-        }
-
-    }
-
-    void printUser() {
-        if (!(userNames.isEmpty())) {
-            try {
-                String encode = EncodeDeCode.encode("User connected " + getUserName().toString());
-                dataOutputStream.writeUTF(encode);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-            }
-        } else {
-            try {
-                String encode = EncodeDeCode.encode("No other user connected");
-                dataOutputStream.writeUTF(encode);
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        }
-    }
-
     public static void clrscr() {
         // Clears Screen in java
         try {
@@ -123,7 +60,7 @@ public class ChatServer {
         }
     }
 
-    public void execute() {
+    static void execute() {
         System.out.println("Server is running!");
         System.out.print("Enter connection port : ");
         int port = isNumeric();
@@ -150,8 +87,8 @@ public class ChatServer {
         userNames.add(userName);
     }
 
-    void removeUser(String userName, Socket user) {
-        boolean removeUserName = this.userNames.remove(userName);
+    static void removeUser(String userName, Socket user) {
+        boolean removeUserName = userNames.remove(userName);
         if (removeUserName) {
             System.out.println("The user " + userName + " disconnect!");
         }
@@ -160,10 +97,31 @@ public class ChatServer {
     /**
      * @return the userName
      */
-    public Set<String> getUserName() {
-        return this.userNames;
+    static Set<String> getUserName() {
+        return userNames;
     }
 
+    static void printUser() {
+        if (!(userNames.isEmpty())) {
+            try {
+                String encode = EncodeDeCode.encode("User connected " +
+
+                        ChatServer.getUserName().toString());
+                ChatServer.dataOutputStream.writeUTF(encode);
+            } catch (
+
+            IOException e) {
+                // TODO Auto-generated catch block
+            }
+        } else {
+            try {
+                String encode = EncodeDeCode.encode("No other user connected");
+                dataOutputStream.writeUTF(encode);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+    }
     // boolean hasUser() {
     // return this.userThreads.isEmpty();
     // }
