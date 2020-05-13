@@ -78,13 +78,10 @@ public class ChatClient {
             System.out.println("=============================");
             System.out.println("1.Regist");
             System.out.println("2.Join to chat room");
-            System.out.println("0.Exit ");
             System.out.println("=============================");
             System.out.print("#Select : ");
             int select = isNumeric();
-            if (select == 0) {
-                System.exit(1);
-            }
+
             switch (select) {
                 case 1:
                     ChatServer.clrscr();

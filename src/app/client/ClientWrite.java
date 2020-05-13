@@ -38,7 +38,6 @@ public class ClientWrite extends Thread {
             dataOutputStream.writeUTF(encode);
             String mess;
             do {
-                System.out.print(userName + " : ");
                 mess = scanner.nextLine();
                 encode = EncodeDeCode.encode(mess);
                 dataOutputStream.writeUTF(encode);

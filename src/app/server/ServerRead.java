@@ -34,7 +34,7 @@ public class ServerRead extends Thread {
                 encode = EncodeDeCode.encode(decodeUserName + " : " + decode);
                 ChatServer.sendMessageToAllClient(encode, socket);
                 if (decode.equals("bye")) {
-                    ChatServer.removeUser(userName, socket);
+                    ChatServer.userNames.remove(decodeUserName);
                     System.out.println(decodeUserName + " has quitted");
                     socket.close();
                     encode = EncodeDeCode.encode(decodeUserName + " has quitted");
