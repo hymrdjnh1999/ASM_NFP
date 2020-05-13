@@ -2,13 +2,15 @@ package app.client;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class ChatClient {
-    public static void main(String[] args) {
+import app.server.ChatServer;
 
-        execute();
+public class ChatClient {
+
+    public static void main(String[] args) throws IOException {
+
+        mainMenu();
     }
 
     private static String hostName = "", userName;
@@ -16,13 +18,61 @@ public class ChatClient {
     static Scanner scanner = new Scanner(System.in);
     private static Socket socket;
 
+    static int isNumeric() {
+        int number = -1;
+        while (true) {
+            try {
+                number = Integer.parseInt(scanner.nextLine());
+
+                break;
+            } catch (Exception e) {
+
+                System.out.print("Please enter decimal integer : ");
+
+            }
+        }
+        return number;
+    }
+
     public ChatClient(Socket socket) {
         this.socket = socket;
 
     }
 
-    public static void mainMenu() {
+    static void checkSocketIsCorrect() {
         while (true) {
+            System.out.print("Enter host name : ");
+            hostName = scanner.nextLine();
+            System.out.print("Enter port server : ");
+            while (true) {
+                try {
+                    port = Integer.parseInt(scanner.nextLine());
+                    break;
+                } catch (Exception e) {
+                    System.err.print("Please input integer decimal : ");
+                }
+            }
+            try {
+
+                if (new Socket(hostName, port).isConnected())
+                    break;
+                else
+                    socket.close();
+            } catch (Exception e) {
+                ChatServer.clrscr();
+
+                System.err.println("Not found server!\nPlease re-enter port and your host name !");
+            }
+        }
+        System.out.println("Connection successfully with your host name : " + hostName + " port server : " + port);
+        System.out.print("Enter to continue... ");
+        scanner.nextLine();
+
+    }
+
+    public static void mainMenu() throws IOException {
+        while (true) {
+            ChatServer.clrscr();
             System.out.println("=============================");
             System.out.println("Sig up to chat");
             System.out.println("=============================");
@@ -31,40 +81,44 @@ public class ChatClient {
             System.out.println("0.Exit ");
             System.out.println("=============================");
             System.out.print("#Select : ");
-            int select = Integer.parseInt(scanner.nextLine());
+            int select = isNumeric();
             if (select == 0) {
                 System.exit(1);
             }
             switch (select) {
                 case 1:
-                    System.out.print("Enter host name : ");
-                    hostName = scanner.nextLine();
-                    System.out.print("Enter port server : ");
-                    port = Integer.parseInt(scanner.nextLine());
+                    ChatServer.clrscr();
+                    checkSocketIsCorrect();
                     break;
                 case 2:
+                    ChatServer.clrscr();
                     break;
+                default:
+                    System.err.print("Not have this option!\nEnter to continue...");
+                    scanner.nextLine();
+                    break;
+
             }
-            if (select == 2)
-                break;
+            if (select == 2) {
+
+                if (port != -1 && !(hostName.equals(""))) {
+
+                    socket = new Socket(hostName, port);
+                    break;
+                } else {
+
+                    System.out.print("Please regist before joi to room!\nEnter to continue...");
+                    scanner.nextLine();
+                }
+
+            }
 
         }
 
-        try {
-            Socket socket = new Socket(hostName, port);
-            System.out.println("Connect to the chat server ");
-            new ReadThread(socket).start();
-            new WriteThread(socket).start();
+        System.out.println("Connect to the chat server ");
+        new ReadThread(socket).start();
+        new WriteThread(socket).start();
 
-        } catch (UnknownHostException e) {
-            System.out.println("Server not found : " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("I/O Error: " + e.getMessage());
-        }
-    }
-
-    public static void execute() {
-        mainMenu();
     }
 
     /**

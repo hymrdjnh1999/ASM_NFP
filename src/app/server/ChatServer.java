@@ -15,6 +15,40 @@ public class ChatServer {
     private Set<String> userNames = new HashSet<String>();
     private Set<Socket> listUser = new HashSet<Socket>();
     private DataOutputStream dataOutputStream;
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        new ChatServer().execute();
+    }
+
+    void sendMessageToAllClient(String message, Socket excludeUser) {
+        for (Socket user : this.listUser) {
+            if (!user.equals(excludeUser)) {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
+                    dataOutputStream.writeUTF(message);
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
+    static int isNumeric() {
+        int number = -1;
+        while (true) {
+            try {
+                number = Integer.parseInt(scanner.nextLine());
+
+                break;
+            } catch (Exception e) {
+
+                System.out.print("Please enter decimal integer : ");
+
+            }
+        }
+        return number;
+    }
 
     public class ServerRead extends Thread {
         Socket socket;
@@ -78,12 +112,24 @@ public class ChatServer {
         }
     }
 
-    public void execute() {
+    public static void clrscr() {
+        // Clears Screen in java
+        try {
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                Runtime.getRuntime().exec("clear");
+        } catch (IOException | InterruptedException ex) {
+        }
+    }
 
-        System.out.print("Enter port : ");
-        int port = Integer.parseInt(new Scanner(System.in).nextLine());
+    public void execute() {
+        System.out.println("Server is running!");
+        System.out.print("Enter connection port : ");
+        int port = isNumeric();
         try {
             ServerSocket serverSocket = new ServerSocket(port);
+            clrscr();
             System.out.println("waiting client connection on port : " + port);
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -97,23 +143,6 @@ public class ChatServer {
         } catch (Exception e) {
             System.out.println("Error in the server " + e.getMessage());
             e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        new ChatServer().execute();
-    }
-
-    void sendMessageToAllClient(String message, Socket excludeUser) {
-        for (Socket user : this.listUser) {
-            if (!user.equals(excludeUser)) {
-                try {
-                    DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
-                    dataOutputStream.writeUTF(message);
-                } catch (Exception e) {
-
-                }
-            }
         }
     }
 
