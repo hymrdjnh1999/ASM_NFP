@@ -36,13 +36,14 @@ public class ClientWrite extends Thread {
             ChatClient.setUserName(userName);
             String encode = EncodeDeCode.encode(userName);
             dataOutputStream.writeUTF(encode);
+            System.out.print("Accept name " + userName + " type your message : ");
             String mess;
             do {
                 mess = scanner.nextLine();
                 encode = EncodeDeCode.encode(mess);
                 dataOutputStream.writeUTF(encode);
-            } while (!mess.equals("bye") || !mess.equals("quit"));
-
+            } while (!mess.equals("bye"));
+            ChatClient.mainMenu();
         } catch (Exception e) {
             // TODO: handle exception
         }

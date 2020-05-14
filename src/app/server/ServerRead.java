@@ -9,7 +9,7 @@ import app.EncodeDeCode;
 public class ServerRead extends Thread {
     Socket socket;
 
-    public ServerRead(Socket socket) {
+    protected ServerRead(Socket socket) {
         this.socket = socket;
 
     }
@@ -27,7 +27,6 @@ public class ServerRead extends Thread {
             System.out.println(reportConnect);
             String encode = EncodeDeCode.encode(reportConnect);
             ChatServer.sendMessageToAllClient(encode, socket);
-            // System.out.println(reportConnect);
             while (true) {
                 String read = dataInputStream.readUTF();
                 decode = EncodeDeCode.decode(read);
@@ -36,9 +35,10 @@ public class ServerRead extends Thread {
                 if (decode.equals("bye")) {
                     ChatServer.userNames.remove(decodeUserName);
                     System.out.println(decodeUserName + " has quitted");
-                    socket.close();
+
                     encode = EncodeDeCode.encode(decodeUserName + " has quitted");
                     ChatServer.sendMessageToAllClient(encode, socket);
+                    stop();
                     break;
                 }
             }

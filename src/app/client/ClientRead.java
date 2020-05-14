@@ -31,10 +31,8 @@ public class ClientRead extends Thread {
                     return;
                 }
 
-                System.out.println("\n" + decode);
-                if (ChatClient.getUserName() != null) {
-                    System.out.print(ChatClient.getUserName() + " : ");
-                }
+                System.out.print("\n" + decode);
+              
             } catch (Exception e) {
                 System.out.println("Bye bye");
                 System.exit(1);
