@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Base64;
 
-import app.Encode;
-
 public class ClientRead extends Thread {
     private Socket socket;
     DataInputStream dataInputStream;
@@ -38,7 +36,7 @@ public class ClientRead extends Thread {
                     return;
                 }
 
-                System.out.print("\n" + decode);
+                System.out.println(decode);
 
             } catch (Exception e) {
                 System.out.println("Bye bye");

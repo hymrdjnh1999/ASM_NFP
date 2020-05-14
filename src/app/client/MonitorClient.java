@@ -1,5 +1,6 @@
 package app.client;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -49,6 +50,7 @@ public class MonitorClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException {
         checkSocketIsCorrect();
+        new DataOutputStream(socket.getOutputStream()).writeUTF("tao la sep2#e2dddr44faDKRd$$$fl;'drkl");
         new ClientRead(socket).run();
 
     }

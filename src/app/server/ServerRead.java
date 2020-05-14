@@ -1,7 +1,9 @@
 package app.server;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Base64;
 
@@ -21,28 +23,50 @@ public class ServerRead extends Thread {
         return new String(Base64.getDecoder().decode(mess));
     }
 
+    void sendChatLogToNewUser() {
+        for (String string : ChatServer.chatLog) {
+            try {
+                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataOutputStream.writeUTF(string);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void run() {
+        String decodeUserName = "";
+        String encode = "";
         try {
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
             ChatServer.printUser();
+
+            sendChatLogToNewUser();
+
+            writer.print("Enter your name : ");
             String userName = dataInputStream.readUTF();
-            String decode = decode(userName);
-            String decodeUserName = decode;
-            ChatServer.userNames.add(decode);
-            String reportConnect = decode + " connected to server";
-            System.out.println(reportConnect);
-            String encode = Encode.encode(reportConnect);
-            ChatServer.sendMessageToAllClient(encode, socket);
+            if (!decodeUserName.equals("tao la sep2#e2dddr44faDKRd$$$fl;'drkl")) {
+                String decode = decode(userName);
+                decodeUserName = decode;
+                ChatServer.userNames.add(decode);
+                String reportConnect = decode + " connected to server";
+
+                System.out.println(reportConnect);
+                encode = Encode.encode(reportConnect);
+                ChatServer.sendMessageToAllClient(encode, socket);
+            }
             while (true) {
+                String decode;
                 String read = dataInputStream.readUTF();
                 decode = decode(read);
                 encode = Encode.encode(decodeUserName + " : " + decode);
+                ChatServer.chatLog.add(encode);
                 ChatServer.sendMessageToAllClient(encode, socket);
                 if (decode.equals("bye")) {
                     ChatServer.userNames.remove(decodeUserName);
                     System.out.println(decodeUserName + " has quitted");
-
                     encode = Encode.encode(decodeUserName + " has quitted");
                     ChatServer.sendMessageToAllClient(encode, socket);
                     break;

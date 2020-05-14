@@ -4,9 +4,11 @@ import java.io.Console;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-import app.EncodeDeCode;
+import app.Encode;
 
 public class ClientWrite extends Thread {
     private Socket socket;
@@ -31,21 +33,23 @@ public class ClientWrite extends Thread {
     @Override
     public void run() {
         try {
-            Console console = System.console();
-            String userName = console.readLine("\nEnter yor name : ");
+
+            String userName = "";
+            userName = scanner.nextLine();
             ChatClient.setUserName(userName);
-            String encode = EncodeDeCode.encode(userName);
+            String encode = Encode.encode(userName);
             dataOutputStream.writeUTF(encode);
             System.out.print("Accept name " + userName + " type your message : ");
             String mess;
             do {
                 mess = scanner.nextLine();
-                encode = EncodeDeCode.encode(mess);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                String timeSend = dtf.format(LocalTime.now()).toString();
+                encode = Encode.encode("[" + timeSend + "] " + mess);
                 dataOutputStream.writeUTF(encode);
             } while (!mess.equals("bye"));
             ChatClient.mainMenu();
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 }

@@ -4,7 +4,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ public class ChatServer {
     private static Set<Socket> listUser = new HashSet<Socket>();
     static DataOutputStream dataOutputStream;
     static Scanner scanner = new Scanner(System.in);
+    protected static List<String> chatLog = new ArrayList<String>();
 
     public static void main(String[] args) {
         execute();
@@ -111,18 +114,14 @@ public class ChatServer {
             } catch (
 
             IOException e) {
-                // TODO Auto-generated catch block
             }
         } else {
             try {
                 String encode = Encode.encode("No other user connected");
                 dataOutputStream.writeUTF(encode);
             } catch (Exception e) {
-                // TODO: handle exception
             }
         }
     }
-    // boolean hasUser() {
-    // return this.userThreads.isEmpty();
-    // }
+
 }

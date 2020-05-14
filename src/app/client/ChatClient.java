@@ -74,14 +74,18 @@ public class ChatClient {
         while (true) {
             ChatServer.clrscr();
             System.out.println("=============================");
-            System.out.println("Sig up to chat");
+            System.out.println("|      Sig up to chat       |");
             System.out.println("=============================");
-            System.out.println("1.Regist");
-            System.out.println("2.Join to chat room");
+            System.out.println("| 1.Regist                  |");
+            System.out.println("| 2.Join to chat room       |");
+            System.out.println("| 0.Exit                    |");
             System.out.println("=============================");
             System.out.print("#Select : ");
             int select = isNumeric();
-
+            if (select == 0) {
+                System.out.println("Bye byeeeee");
+                System.exit(1);
+            }
             switch (select) {
                 case 1:
                     ChatServer.clrscr();
@@ -90,6 +94,7 @@ public class ChatClient {
                 case 2:
                     ChatServer.clrscr();
                     break;
+
                 default:
                     System.err.print("Not have this option!\nEnter to continue...");
                     scanner.nextLine();
