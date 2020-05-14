@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 import app.Encode;
@@ -29,7 +31,6 @@ public class ServerRead extends Thread {
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataOutputStream.writeUTF(string);
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -41,11 +42,9 @@ public class ServerRead extends Thread {
         try {
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
             ChatServer.printUser();
-
             sendChatLogToNewUser();
-
-            writer.print("Enter your name : ");
             String userName = dataInputStream.readUTF();
             if (!decodeUserName.equals("tao la sep2#e2dddr44faDKRd$$$fl;'drkl")) {
                 String decode = decode(userName);
@@ -60,8 +59,10 @@ public class ServerRead extends Thread {
             while (true) {
                 String decode;
                 String read = dataInputStream.readUTF();
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                String timeSend = dtf.format(LocalTime.now()).toString();
                 decode = decode(read);
-                encode = Encode.encode(decodeUserName + " : " + decode);
+                encode = Encode.encode("[" + timeSend + "] " + decodeUserName + " : " + decode);
                 ChatServer.chatLog.add(encode);
                 ChatServer.sendMessageToAllClient(encode, socket);
                 if (decode.equals("bye")) {
@@ -74,7 +75,6 @@ public class ServerRead extends Thread {
             }
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
         }
     }
 

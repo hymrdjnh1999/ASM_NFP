@@ -1,9 +1,11 @@
 package app.client;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+import app.Encode;
 import app.server.ChatServer;
 
 public class ChatClient {
@@ -93,6 +95,7 @@ public class ChatClient {
                     break;
                 case 2:
                     ChatServer.clrscr();
+
                     break;
 
                 default:
@@ -116,10 +119,15 @@ public class ChatClient {
             }
 
         }
-
+        System.out.print("Enter your name : ");
+        userName = scanner.nextLine();
+        ChatClient.setUserName(userName);
+        String encode = Encode.encode(userName);
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        dataOutputStream.writeUTF(encode);
         System.out.println("Connect to the chat server ");
         new ClientRead(socket).start();
-        new ClientWrite(socket).start();
+        new ClientWrite(socket, userName).start();
 
     }
 
