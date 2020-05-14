@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - MonitorClient",
+            "request": "launch",
+            "mainClass": "app.client.MonitorClient",
+            "projectName": "ASM_NFP"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"

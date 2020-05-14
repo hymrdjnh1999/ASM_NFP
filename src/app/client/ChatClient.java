@@ -104,7 +104,7 @@ public class ChatClient {
                     break;
                 } else {
 
-                    System.out.print("Please regist before joi to room!\nEnter to continue...");
+                    System.out.print("Please regist before join to room!\nEnter to continue...");
                     scanner.nextLine();
                 }
 

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-import app.EncodeDeCode;
+import app.Encode;
 
 public class ChatServer {
     public static Set<String> userNames = new HashSet<String>();
@@ -104,7 +104,7 @@ public class ChatServer {
     static void printUser() {
         if (!(userNames.isEmpty())) {
             try {
-                String encode = EncodeDeCode.encode("User connected " +
+                String encode = Encode.encode("User connected " +
 
                         ChatServer.getUserName().toString());
                 ChatServer.dataOutputStream.writeUTF(encode);
@@ -115,7 +115,7 @@ public class ChatServer {
             }
         } else {
             try {
-                String encode = EncodeDeCode.encode("No other user connected");
+                String encode = Encode.encode("No other user connected");
                 dataOutputStream.writeUTF(encode);
             } catch (Exception e) {
                 // TODO: handle exception
