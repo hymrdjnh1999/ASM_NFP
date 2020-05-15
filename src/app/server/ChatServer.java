@@ -13,8 +13,8 @@ import java.util.Set;
 import app.Encode;
 
 public class ChatServer {
-    public static Set<String> userNames = new HashSet<String>();
-    private static Set<Socket> listUser = new HashSet<Socket>();
+    public static List<String> userNames = new ArrayList<String>();
+    private static List<Socket> listUser = new ArrayList<Socket>();
     static DataOutputStream dataOutputStream;
     static Scanner scanner = new Scanner(System.in);
     protected static List<String> chatLog = new ArrayList<String>();
@@ -100,7 +100,7 @@ public class ChatServer {
     /**
      * @return the userName
      */
-    static Set<String> getUserName() {
+    static List<String> getUserName() {
         return userNames;
     }
 

@@ -20,9 +20,10 @@ public class ServerRead extends Thread {
     }
 
     private static String decode(String mess) {
-        mess = mess.replace("v0oibe+nh/o", "");
+        mess = new String(Base64.getDecoder().decode(mess));
+        mess = mess.replace("==v0oibe+nh/o", "");
         mess = mess.replace("hj32da88hardCode", "");
-        return new String(Base64.getDecoder().decode(mess));
+        return mess;
     }
 
     void sendChatLogToNewUser() {

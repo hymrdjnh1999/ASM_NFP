@@ -15,15 +15,15 @@ public class ClientRead extends Thread {
             // InputStream inputStream =;
             dataInputStream = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
-            System.out.println("Error getting input stream: " + e.getMessage());
-            e.printStackTrace();
+
         }
     }
 
     private static String decode(String mess) {
-        mess = mess.replace("v0oibe+nh/o", "");
+        mess = new String(Base64.getDecoder().decode(mess));
+        mess = mess.replace("==v0oibe+nh/o", "");
         mess = mess.replace("hj32da88hardCode", "");
-        return new String(Base64.getDecoder().decode(mess));
+        return mess;
     }
 
     @Override
