@@ -5,19 +5,21 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 import app.Encode;
 
 public class ChatServer {
     public static List<String> userNames = new ArrayList<String>();
-    private static List<Socket> listUser = new ArrayList<Socket>();
+    public static List<String> userNameNotEncode = new ArrayList<>();
+    protected static List<Socket> listUser = new ArrayList<Socket>();
+    protected static List<Socket> listUserNotEncode = new ArrayList<>();
+
     static DataOutputStream dataOutputStream;
     static Scanner scanner = new Scanner(System.in);
     protected static List<String> chatLog = new ArrayList<String>();
+    protected static List<String> chatLogNotEncode = new ArrayList<>();
 
     public static void main(String[] args) {
         execute();
@@ -31,6 +33,19 @@ public class ChatServer {
                     dataOutputStream.writeUTF(message);
                 } catch (Exception e) {
 
+                }
+            }
+        }
+    }
+
+    static void sendMessageToAllClientNotEncode(String mess, Socket CurrentSocket) {
+        for (Socket user : listUserNotEncode) {
+            if (!user.equals(CurrentSocket)) {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
+                    dataOutputStream.writeUTF(mess);
+                } catch (Exception e) {
+                    // TODO: handle exception
                 }
             }
         }
@@ -75,7 +90,6 @@ public class ChatServer {
                 Socket socket = serverSocket.accept();
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 ServerRead serverRead = new ServerRead(socket);
-                listUser.add(socket);
                 serverRead.start();
 
             }
@@ -86,22 +100,21 @@ public class ChatServer {
         }
     }
 
-    void addUserName(String userName) {
-        userNames.add(userName);
-    }
+    static void printUserNotEncode() {
+        if (!(userNameNotEncode.isEmpty())) {
+            try {
+                ChatServer.dataOutputStream.writeUTF("User connected " + ChatServer.userNameNotEncode.toString());
+            } catch (
 
-    static void removeUser(String userName, Socket user) {
-        boolean removeUserName = userNames.remove(userName);
-        if (removeUserName) {
-            System.out.println("The user " + userName + " disconnect!");
+            IOException e) {
+            }
+        } else {
+            try {
+
+                dataOutputStream.writeUTF("No other user connected");
+            } catch (Exception e) {
+            }
         }
-    }
-
-    /**
-     * @return the userName
-     */
-    static List<String> getUserName() {
-        return userNames;
     }
 
     static void printUser() {
@@ -109,7 +122,7 @@ public class ChatServer {
             try {
                 String encode = Encode.encode("User connected " +
 
-                        ChatServer.getUserName().toString());
+                        ChatServer.userNames.toString());
                 ChatServer.dataOutputStream.writeUTF(encode);
             } catch (
 

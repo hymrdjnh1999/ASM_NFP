@@ -10,17 +10,13 @@ public class readNotDecode extends Thread {
 
     public readNotDecode(Socket socket) {
         this.socket = socket;
-        try {
-            // InputStream inputStream =;
-            dataInputStream = new DataInputStream(socket.getInputStream());
-        } catch (IOException e) {
-        }
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            dataInputStream = new DataInputStream(socket.getInputStream());
+            while (true) {
                 String Message = dataInputStream.readUTF();
 
                 if (Message.isEmpty()) {
@@ -28,9 +24,10 @@ public class readNotDecode extends Thread {
                 }
                 System.out.println(Message);
 
-            } catch (Exception e) {
-
             }
+        } catch (IOException e1) {
+
         }
+
     }
 }

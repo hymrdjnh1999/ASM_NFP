@@ -6,15 +6,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import app.Encode;
 import app.server.ChatServer;
 
 public class MonitorClient {
     static Socket socket;
     static String hostName = "";
     static int port = -1;
+    static Scanner scanner = new Scanner(System.in);
 
     static void checkSocketIsCorrect() throws UnknownHostException, IOException {
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.print("Enter host name : ");
@@ -50,8 +51,33 @@ public class MonitorClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException {
         checkSocketIsCorrect();
-        new DataOutputStream(socket.getOutputStream()).writeUTF("tao la sep2#e2dddr44faDKRd$$$fl;'drkl");
-        new ClientRead(socket).run();
-
+        String select;
+        while (true) {
+            ChatServer.clrscr();
+            System.out.println("==============================");
+            System.out.println("|      Choose chat room      |");
+            System.out.println("==============================");
+            System.out.println("| 1.Not have encode          |");
+            System.out.println("| 2.Have encode              |");
+            System.out.println("==============================");
+            System.out.print("#Select : ");
+            select = scanner.nextLine();
+            if (select.equals("1") || select.equals("2")) {
+                break;
+            } else {
+                System.out.print("Not have this option!\nEnter to continue...");
+                scanner.nextLine();
+            }
+        }
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        dataOutputStream.writeUTF(select);
+        if (select.equals("1")) {
+            dataOutputStream.writeUTF("tao la sep2#e2dddr44faDKRd$$$fl;'drkl");
+            new readNotDecode(socket).start();
+        } else {
+            String userName = "tao la sep2#e2dddr44faDKRd$$$fl;'drkl";
+            dataOutputStream.writeUTF(userName);
+            new ClientRead(socket).run();
+        }
     }
 }

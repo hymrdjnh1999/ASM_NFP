@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-import app.Encode;
 import app.server.ChatServer;
 
 public class ChatClient {
 
-    private static String hostName = "", userName;
+    private static String hostName = "";
     private static int port = -1;
     static Scanner scanner = new Scanner(System.in);
     static Socket socket;
@@ -72,7 +71,45 @@ public class ChatClient {
 
     }
 
-    public static void mainMenu() throws IOException {
+    protected static void selectChatRoomMenu() {
+        String select = "";
+        while (true) {
+            ChatServer.clrscr();
+            System.out.println("==============================");
+            System.out.println("|      Choose chat room      |");
+            System.out.println("==============================");
+            System.out.println("| 1.Not have encode          |");
+            System.out.println("| 2.Have encode              |");
+            System.out.println("==============================");
+            System.out.print("#Select : ");
+            select = scanner.nextLine();
+            if (select.equals("1") || select.equals("2")) {
+                break;
+            } else {
+                System.out.print("Not have this option!\nEnter to continue...");
+                scanner.nextLine();
+            }
+        }
+
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            if (select.equals("1")) {
+
+                dataOutputStream.writeUTF(select);
+                new readNotDecode(socket).start();
+                new writeNotEncode(socket).start();
+
+            } else {
+                dataOutputStream.writeUTF(select);
+                new ClientRead(socket).start();
+                new ClientWrite(socket).start();
+
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    protected static void mainMenu() throws IOException {
         while (true) {
             ChatServer.clrscr();
             System.out.println("=============================");
@@ -119,30 +156,15 @@ public class ChatClient {
             }
 
         }
-        System.out.print("Enter your name : ");
-        userName = scanner.nextLine();
-        ChatClient.setUserName(userName);
-        String encode = Encode.encode(userName);
-        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-        dataOutputStream.writeUTF(encode);
-        System.out.println("Connect to the chat server ");
-        new ClientRead(socket).start();
-        new ClientWrite(socket, userName).start();
-
+        selectChatRoomMenu();
     }
 
     /**
      * @param userName the userName to set
      */
-    public static void setUserName(String _Name) {
-        userName = _Name;
-    }
 
     /**
      * @return the userName
      */
-    public static String getUserName() {
-        return userName;
-    }
 
 }
