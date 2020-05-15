@@ -19,6 +19,16 @@ public class ChatClient {
         mainMenu();
     }
 
+    static String checkStringIsEmpty() {
+        String name = "";
+        do {
+            name = scanner.nextLine();
+
+        } while (name == null || name.trim().isEmpty());
+
+        return name;
+    }
+
     static int isNumeric() {
         int number = -1;
         while (true) {
@@ -43,7 +53,7 @@ public class ChatClient {
     static void checkSocketIsCorrect() {
         while (true) {
             System.out.print("Enter host name : ");
-            hostName = scanner.nextLine();
+            hostName = checkStringIsEmpty();
             System.out.print("Enter port server : ");
             while (true) {
                 try {
@@ -156,7 +166,22 @@ public class ChatClient {
             }
 
         }
+<<<<<<< HEAD
         selectChatRoomMenu();
+=======
+
+        System.out.print("Enter your name : ");
+        userName = checkStringIsEmpty();
+
+        ChatClient.setUserName(userName);
+        String encode = Encode.encode(userName);
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        dataOutputStream.writeUTF(encode);
+        System.out.println("Connect to the chat server ");
+        new ClientRead(socket).start();
+        new ClientWrite(socket, userName).start();
+
+>>>>>>> 880f560a1875ef01702edcccb7cc724450446d5b
     }
 
     /**
