@@ -19,65 +19,8 @@ public class ChatClient {
         mainMenu();
     }
 
-    static String checkStringIsEmpty() {
-        String name = "";
-        do {
-            name = scanner.nextLine();
-
-        } while (name == null || name.trim().isEmpty());
-
-        return name;
-    }
-
-    static int isNumeric() {
-        int number = -1;
-        while (true) {
-            try {
-                number = Integer.parseInt(scanner.nextLine());
-
-                break;
-            } catch (Exception e) {
-
-                System.out.print("Please enter decimal integer : ");
-
-            }
-        }
-        return number;
-    }
-
     public ChatClient(Socket socket) {
         this.socket = socket;
-
-    }
-
-    static void checkSocketIsCorrect() {
-        while (true) {
-            System.out.print("Enter host name : ");
-            hostName = checkStringIsEmpty();
-            System.out.print("Enter port server : ");
-            while (true) {
-                try {
-                    port = Integer.parseInt(scanner.nextLine());
-                    break;
-                } catch (Exception e) {
-                    System.err.print("Please input integer decimal : ");
-                }
-            }
-            try {
-
-                if (new Socket(hostName, port).isConnected())
-                    break;
-                else
-                    socket.close();
-            } catch (Exception e) {
-                ChatServer.clrscr();
-
-                System.err.println("Wrong host name or not found server!\nPlease re-enter port and your host name !");
-            }
-        }
-        System.out.println("Connection successfully with your host name : " + hostName + " port server : " + port);
-        System.out.print("Enter to continue... ");
-        scanner.nextLine();
 
     }
 
@@ -130,7 +73,7 @@ public class ChatClient {
             System.out.println("| 0.Exit                    |");
             System.out.println("=============================");
             System.out.print("#Select : ");
-            int select = isNumeric();
+            int select = handleInput.isNumeric();
             if (select == 0) {
                 System.out.println("Bye byeeeee");
                 System.exit(1);
@@ -138,7 +81,7 @@ public class ChatClient {
             switch (select) {
                 case 1:
                     ChatServer.clrscr();
-                    checkSocketIsCorrect();
+                    socket = handleInput.checkSocketIsCorrect();
                     break;
                 case 2:
                     ChatServer.clrscr();
@@ -152,7 +95,8 @@ public class ChatClient {
 
             }
             if (select == 2) {
-
+                port = handleInput.port;
+                hostName = handleInput.hostName;
                 if (port != -1 && !(hostName.equals(""))) {
 
                     socket = new Socket(hostName, port);
@@ -166,22 +110,7 @@ public class ChatClient {
             }
 
         }
-<<<<<<< HEAD
         selectChatRoomMenu();
-=======
-
-        System.out.print("Enter your name : ");
-        userName = checkStringIsEmpty();
-
-        ChatClient.setUserName(userName);
-        String encode = Encode.encode(userName);
-        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-        dataOutputStream.writeUTF(encode);
-        System.out.println("Connect to the chat server ");
-        new ClientRead(socket).start();
-        new ClientWrite(socket, userName).start();
-
->>>>>>> 880f560a1875ef01702edcccb7cc724450446d5b
     }
 
     /**
