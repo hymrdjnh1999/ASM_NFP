@@ -34,7 +34,7 @@ public class writeNotEncode extends Thread {
                 mess = scanner.nextLine();
                 dataOutputStream.writeUTF(mess);
             } while (!mess.equals("bye"));
-            ChatClient.mainMenu();
+            MenuChatClient.mainMenu();
         } catch (Exception e) {
         }
     }

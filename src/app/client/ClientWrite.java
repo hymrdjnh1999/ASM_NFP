@@ -17,20 +17,12 @@ public class ClientWrite extends Thread {
 
     }
 
-    String checkUserNameEmpty() {
-        String user = "";
-        do {
-            user = scanner.nextLine();
-        } while (user == null || user.trim().isEmpty());
-        return user;
-    }
-
     @Override
     public void run() {
         try {
             sleep(70);
             System.out.print("Enter your name : ");
-            String userName = checkUserNameEmpty();
+            String userName = handleInput.checkStringIsEmpty();
             String encode = Encode.encode(userName);
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF(encode);
@@ -40,7 +32,7 @@ public class ClientWrite extends Thread {
                 encode = Encode.encode(mess);
                 dataOutputStream.writeUTF(encode);
             } while (!mess.equals("bye"));
-            ChatClient.mainMenu();
+            MenuChatClient.mainMenu();
         } catch (Exception e) {
         }
     }

@@ -1,70 +1,11 @@
 package app.server;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import app.Encode;
 
 public class ChatServer {
-    public static List<String> userNames = new ArrayList<String>();
-    public static List<String> userNameNotEncode = new ArrayList<>();
-    protected static List<Socket> listUser = new ArrayList<Socket>();
-    protected static List<Socket> listUserNotEncode = new ArrayList<>();
-
-    static DataOutputStream dataOutputStream;
-    static Scanner scanner = new Scanner(System.in);
-    protected static List<String> chatLog = new ArrayList<String>();
-    protected static List<String> chatLogNotEncode = new ArrayList<>();
 
     public static void main(String[] args) {
-        execute();
-    }
-
-    static void sendMessageToAllClient(String message, Socket excludeUser) {
-        for (Socket user : listUser) {
-            if (!user.equals(excludeUser)) {
-                try {
-                    DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
-                    dataOutputStream.writeUTF(message);
-                } catch (Exception e) {
-
-                }
-            }
-        }
-    }
-
-    static void sendMessageToAllClientNotEncode(String mess, Socket CurrentSocket) {
-        for (Socket user : listUserNotEncode) {
-            if (!user.equals(CurrentSocket)) {
-                try {
-                    DataOutputStream dataOutputStream = new DataOutputStream(user.getOutputStream());
-                    dataOutputStream.writeUTF(mess);
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-            }
-        }
-    }
-
-    static int isNumeric() {
-        int number = -1;
-        while (true) {
-            try {
-                number = Integer.parseInt(scanner.nextLine());
-
-                break;
-            } catch (Exception e) {
-
-                System.out.print("Please enter decimal integer : ");
-
-            }
-        }
-        return number;
+        ServerHandle.handle();
     }
 
     public static void clrscr() {
@@ -75,65 +16,6 @@ public class ChatServer {
             else
                 Runtime.getRuntime().exec("clear");
         } catch (IOException | InterruptedException ex) {
-        }
-    }
-
-    static void execute() {
-        System.out.println("Server is running!");
-        System.out.print("Enter connection port : ");
-        int port = isNumeric();
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            clrscr();
-            System.out.println("waiting client connection on port : " + port);
-            while (true) {
-                Socket socket = serverSocket.accept();
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                ServerRead serverRead = new ServerRead(socket);
-                serverRead.start();
-
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error in the server " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    static void printUserNotEncode() {
-        if (!(userNameNotEncode.isEmpty())) {
-            try {
-                ChatServer.dataOutputStream.writeUTF("User connected " + ChatServer.userNameNotEncode.toString());
-            } catch (
-
-            IOException e) {
-            }
-        } else {
-            try {
-
-                dataOutputStream.writeUTF("No other user connected");
-            } catch (Exception e) {
-            }
-        }
-    }
-
-    static void printUser() {
-        if (!(userNames.isEmpty())) {
-            try {
-                String encode = Encode.encode("User connected " +
-
-                        ChatServer.userNames.toString());
-                ChatServer.dataOutputStream.writeUTF(encode);
-            } catch (
-
-            IOException e) {
-            }
-        } else {
-            try {
-                String encode = Encode.encode("No other user connected");
-                dataOutputStream.writeUTF(encode);
-            } catch (Exception e) {
-            }
         }
     }
 
